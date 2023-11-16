@@ -1,18 +1,31 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+const int WaterPump = 5;
+const int sensor = A0;
+int umidade;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(9600);
+  pinMode(sensor, INPUT);
+  pinMode(WaterPump, OUTPUT);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+  umidade = analogRead(sensor);
+  umidade = map(umidade, 1023, 315, 0, 100);
+  Serial.print("Umidade encontrada: ");
+  Serial.print(umidade);
+  Serial.print("% ");
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  if (umidade < 50) {
+    Serial.println("Status: Solo seco");
+    digitalWrite(WaterPump, HIGH);
+    delay(5000);
+    digitalWrite(WaterPump, LOW);
+  }
+  else {
+   Serial.println("Status: Solo úmido");
+  }
+  
+  delay(500);
 }
